@@ -1,0 +1,46 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: orderTest
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  datasource:
+    url: jdbc:mysql://localhost:3306/seata_order?characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+seata:
+  enabled: true
+  enable-auto-data-source-proxy: true
+  tx-service-group: my_test_tx_group
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+      namespace: 6b4c56c3-7428-45a0-b6cc-49a2a38367eb
+
+feign:
+  client:
+    config:
+      default:
+        # 日志级别
+#        loggerLevel: full
+        # 从连接建立时开始应用，在返回响应时间过长时触发。
+        readTimeout: 5000
+        # 指的是建立连接后从服务器读取到可用资源所用的时间
+        connectTimeout: 5000

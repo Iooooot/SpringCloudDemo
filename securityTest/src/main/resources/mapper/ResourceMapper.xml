@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wht.mapper.ResourceMapper">
+
+    <select id="selectResourceMap" resultType="java.util.Map">
+        SELECT sre.url,GROUP_CONCAT(sr.`role_key`) roles
+        FROM
+            sys_resource sre
+                LEFT JOIN
+            sys_role_resource_relation srr ON sre.id = srr.resource_id
+                LEFT JOIN
+            sys_role sr on sr.id = srr.role_id
+        group by sre.url
+    </select>
+</mapper>

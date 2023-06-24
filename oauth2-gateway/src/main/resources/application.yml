@@ -1,0 +1,51 @@
+server:
+  port: 8004
+
+spring:
+  application:
+    name: oauth2-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: oauth2-auth-route # 路由ID，没有固定规则但是要求唯一，建议配合服务名
+          uri: lb://security-test #匹配后提供服务的路由地址
+          predicates:
+            - Path=/auth/** #断言，路径相匹配的进行路由
+          filters:
+            - StripPrefix=1
+        - id: oauth2-api-route # 路由ID，没有固定规则但是要求唯一，建议配合服务名
+          uri: lb://service-provider #匹配后提供服务的路由地址
+          predicates:
+            - Path=/api/** #断言，路径相匹配的进行路由
+          filters:
+            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能
+          lower-case-service-id: true #使用小写服务名，默认是大写
+
+
+  redis:
+    database: 0
+    host: 127.0.0.1 #Redis服务器地址
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 5
+        max-wait: -1
+        min-idle: 0
+    port: 6379
+    timeout: 1800000
+
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/actuator/**"
+      - "/auth/oauth/token"
+      - "/auth/user/logout"
+      - "/js/**"
+      - "/css/**"
+      - "/images/**"

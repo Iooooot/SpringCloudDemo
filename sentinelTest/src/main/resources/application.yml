@@ -1,0 +1,52 @@
+server:
+  port: 8005
+
+spring:
+  application:
+    name: sentinelTest
+  cloud:
+    nacos:
+      discovery:
+        # nacos服务注册地址
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        # 配置dashboard地址
+        dashboard: localhost:8080
+        # 默认8719端口
+        port: 8719
+      datasource:
+        ds1:
+          nacos:
+            server-addr: localhost:8848
+            dataId: ${spring.application.name}
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+
+
+
+
+feign:
+#  sentinel:
+#    enabled: true
+  client:
+    config:
+      default:
+        # 日志级别
+#        loggerLevel: full
+        # 从连接建立时开始应用，在返回响应时间过长时触发。
+        readTimeout: 5000
+        # 指的是建立连接后从服务器读取到可用资源所用的时间
+        connectTimeout: 5000
+
+#logging:
+#  level:
+#    # feign日志以什么级别监控哪个接口
+#    com.wht.service.FeignService: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
